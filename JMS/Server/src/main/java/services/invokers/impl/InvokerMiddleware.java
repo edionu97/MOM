@@ -1,13 +1,11 @@
 package services.invokers.impl;
 
 import annotations.OnOperation;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import services.files.IService;
 import services.invokers.IInvokerService;
+import services.invokers.IOperation;
 import services.message.msg.Message;
 import utils.enums.OperationType;
 
@@ -16,7 +14,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 @Component
-public class InvokerMiddleware implements IInvokerService {
+public class InvokerMiddleware implements IInvokerService, IOperation {
 
     private final IService service;
 
@@ -46,17 +44,17 @@ public class InvokerMiddleware implements IInvokerService {
     }
 
     @OnOperation(type = OperationType.FilterByName)
-    private Object findFilesByName(final String name) {
+    public Object findFilesByName(final String name) {
         return service.findFilesByName(name);
     }
 
     @OnOperation(type = OperationType.FilterByContent)
-    private Object findFilesByContent(final String text) {
+    public Object findFilesByContent(final String text) {
         return service.findFilesByText(text);
     }
 
     @OnOperation(type = OperationType.FilterByBinary)
-    private Object findFilesByBinary(final String bytes) {
+    public Object findFilesByBinary(final String bytes) {
 
         //convert bytes from string into byte data
         var convertedBytes = Arrays
@@ -65,12 +63,11 @@ public class InvokerMiddleware implements IInvokerService {
                 .mapToInt(i -> i)
                 .toArray();
 
-
         return service.findFilesByBinary(convertedBytes);
     }
 
     @OnOperation(type = OperationType.FilterDuplicates)
-    private Object findDuplicateFiles(final String payload) {
+    public Object findDuplicateFiles(final String payload) {
         return service.findDuplicateFiles();
     }
 
