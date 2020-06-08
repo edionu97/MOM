@@ -1,6 +1,8 @@
 package repo.models;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -25,14 +27,17 @@ public class Directory {
     @CreationTimestamp
     private Date creationDate;
 
-    @OneToMany(mappedBy = "directory", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "directory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
     private Set<File> files = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_directory_id")
+    @Fetch(FetchMode.JOIN)
     private Directory parentDirectory;
 
-    @OneToMany(mappedBy = "parentDirectory", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentDirectory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
     private Set<Directory> subdirectories = new HashSet<>();
 
 

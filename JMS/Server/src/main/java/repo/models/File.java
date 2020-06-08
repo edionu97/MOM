@@ -1,5 +1,8 @@
 package repo.models;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.sql.Blob;
 import java.util.Objects;
@@ -24,7 +27,8 @@ public class File {
     @Column(name = "text_content", length = 5000)
     private String textContent;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "directory_id")
     private Directory directory;
 
