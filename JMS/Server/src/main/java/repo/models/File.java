@@ -50,6 +50,10 @@ public class File {
         return Objects.hash(getId(), getPath(), getName(), getBinaryContent(), getTextContent());
     }
 
+    public boolean isBinary() {
+        return textContent == null && binaryContent != null;
+    }
+
     //region Properties
 
     public void setId(final int id) {
