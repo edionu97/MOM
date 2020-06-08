@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 
 @Component
 @ComponentScan(basePackages = "config")
-public class Service implements IService {
+public class FileService implements IService {
 
     private final IRepository<File> repository;
     private final ISearcher searcher;
 
     @Autowired
-    public Service(final IRepository<File> repository, ISearcher searcher) {
+    public FileService(final IRepository<File> repository, ISearcher searcher) {
         this.repository = repository;
         this.searcher = searcher;
     }
@@ -104,7 +104,7 @@ public class Service implements IService {
                 //add the file into the sha list
                 map.computeIfAbsent(key, x -> new ArrayList<>());
                 map.get(key).add(file);
-                
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
