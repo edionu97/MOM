@@ -3,7 +3,7 @@ package server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import services.IService;
+import services.files.IService;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "services")

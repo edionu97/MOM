@@ -1,4 +1,4 @@
-package services.impl;
+package services.files.impl;
 
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import repo.models.File;
 import repo.repositories.IRepository;
-import services.IService;
+import services.files.IService;
 import utils.search.ISearcher;
 
 import java.util.ArrayList;
@@ -79,7 +79,6 @@ public class FileService implements IService {
                 .map(File::getPath)
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public List<List<String>> findDuplicateFiles() {
