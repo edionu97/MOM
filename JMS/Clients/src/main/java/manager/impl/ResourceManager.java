@@ -6,8 +6,10 @@ import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
@@ -71,17 +73,9 @@ public class ResourceManager implements IResourceManager {
      */
     private URL getFilePath(final String filename) {
 
-        var url = getClass().getClassLoader().getResource(filename);
-
-        if (url != null) {
-            return url;
-        }
-
         try {
-            var parent = Paths.get(Objects.requireNonNull(getClass().getClassLoader().getResource("application.properties")).toURI()).getParent();
-            Files.createFile(parent.resolve(resourceFile));
-            return getFilePath(filename);
-        } catch (Exception e) {
+            return Paths.get(filename).toUri().toURL();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
