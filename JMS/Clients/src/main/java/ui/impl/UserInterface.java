@@ -1,29 +1,174 @@
 package ui.impl;
 
 import controllers.IUserInterfaceController;
+import messages.request.impl.MiddlewareRequest;
+import messages.response.IResponse;
+import messages.response.impl.DepthListResponse;
+import messages.response.impl.SimpleListResponse;
+import messages.response.impl.abstracts.AbstractResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import ui.IUserInterface;
+import utils.enums.OperationType;
+
+import javax.swing.*;
+import java.util.*;
+import java.util.function.Consumer;
 
 @Component
 @ComponentScan(basePackages = "controllers")
 public class UserInterface implements IUserInterface {
 
     private final IUserInterfaceController controller;
+    private final Map<String, Runnable> options;
 
     @Autowired
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public UserInterface(final IUserInterfaceController controller) {
         this.controller = controller;
+        this.controller.setOnMessage(this::onMessage);
+        options = this.buildMenu();
     }
 
     @Override
+    @SuppressWarnings("InfiniteRecursion")
     public void showUI() {
+        
+        var userOption = showMenuOptions();
 
+        if (options.containsKey(userOption)) {
+            options.get(userOption).run();
+            showUI();
+            return;
+        }
+
+        writeToConsole(new StringBuilder("Wrong option"), true);
+        showUI();
     }
 
-    private void onMessage(final String message) {
+    private Map<String, Runnable> buildMenu() {
 
+        return new HashMap<>() {{
+
+            put("1", () -> {
+                writeToConsole(new StringBuilder("Enter name: "), false);
+                controller.sendRequestMessage(new MiddlewareRequest() {{
+                    setPayload(new Scanner(System.in).nextLine().trim());
+                    setType(OperationType.FilterByName);
+                }});
+            });
+
+            put("2", () -> {
+                writeToConsole(new StringBuilder("Enter text: "), false);
+                controller.sendRequestMessage(new MiddlewareRequest() {{
+                    setPayload(new Scanner(System.in).nextLine().trim());
+                    setType(OperationType.FilterByContent);
+                }});
+            });
+
+            put("3", () -> {
+                writeToConsole(new StringBuilder("Enter hex-bytes separated by spaces: "), false);
+                controller.sendRequestMessage(new MiddlewareRequest() {{
+                    setPayload(new Scanner(System.in).nextLine().trim());
+                    setType(OperationType.FilterByBinary);
+                }});
+            });
+
+            put("4", () -> controller.sendRequestMessage(new MiddlewareRequest() {{
+                        setPayload(null);
+                        setType(OperationType.FilterDuplicates);
+                    }})
+            );
+        }};
+    }
+
+    private String showMenuOptions() {
+        writeToConsole(new StringBuilder()
+                .append("\nPress one of the options\n")
+                .append("1. For filtering by filename\n")
+                .append("2. For filtering by text content\n")
+                .append("3. For filtering by binary content\n")
+                .append("4. For filtering by duplicates\n"), true);
+
+        writeToConsole(new StringBuilder("Your option is: "), false);
+        return new Scanner(System.in).next();
+    }
+
+    private void onMessage(final IResponse message) {
+
+        var response = (AbstractResponse) message;
+        if (response instanceof SimpleListResponse) {
+            writeToConsole(stringifyResponse(response.getOnRequest(), ((SimpleListResponse) response).getResponse()), true);
+            return;
+        }
+
+        writeToConsole(stringifyResponse(response.getOnRequest(), ((DepthListResponse) response).getResponse()), true);
+    }
+
+    private synchronized void writeToConsole(final StringBuilder builder, boolean useNewLine) {
+
+        if (useNewLine) {
+            System.out.println(builder);
+            System.out.flush();
+            return;
+        }
+
+        System.out.print(builder);
+        System.out.flush();
+    }
+
+    private StringBuilder stringifyResponse(final MiddlewareRequest request, final List<?> responseList) {
+
+        //get the list representation
+        var listRepresentation = stringifyList(responseList, 0).toString();
+
+        //get the max number of characters from the longest line
+        int maxLineCharacters = Arrays
+                .stream(listRepresentation.split("\n"))
+                .max(Comparator.comparingInt(String::length))
+                .map(String::length)
+                .get();
+        var line = String
+                .format("The result of middleware call '%s' with payload '%s' is displayed below", request.getType(), request.getPayload());
+        maxLineCharacters = Math.max(maxLineCharacters, line.length());
+
+        //create the response
+        return new StringBuilder()
+                .append("\n".repeat(2))
+                .append("=".repeat(maxLineCharacters))
+                .append("\n".repeat(2))
+                .append(line)
+                .append("\n".repeat(2))
+                .append(listRepresentation)
+                .append("=".repeat(maxLineCharacters))
+                .append("\n".repeat(2));
+    }
+
+    /**
+     * This method is used for  pretty print a list
+     *
+     * @param list:             the list that wil be printed
+     * @param tabulatorIndices: the number of tabs
+     * @return a string builder representing the list
+     */
+    private static StringBuilder stringifyList(List<?> list, int tabulatorIndices) {
+
+        var builder = new StringBuilder();
+
+        builder.append("    ".repeat(tabulatorIndices)).append("[\n");
+        for (var listElement : list) {
+
+            //if the element is a list than we treat element as list
+            if (listElement instanceof List<?>) {
+                builder.append(stringifyList((List<?>) listElement, tabulatorIndices + 1));
+                continue;
+            }
+
+            builder.append("    ".repeat(tabulatorIndices + 1)).append(listElement).append("\n");
+        }
+
+        builder.append("    ".repeat(tabulatorIndices)).append("]\n");
+        return builder;
     }
 }

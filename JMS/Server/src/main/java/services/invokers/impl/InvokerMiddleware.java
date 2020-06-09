@@ -11,6 +11,7 @@ import utils.enums.OperationType;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @Component
@@ -24,7 +25,7 @@ public class InvokerMiddleware implements IInvokerService, IOperation {
     }
 
     @Override
-    public synchronized void invoke(final Message message, final Consumer<Object> responseCallback) {
+    public synchronized void invoke(final Message message, final BiConsumer<Object, Message> responseCallback) {
 
         for (var method : getClass().getDeclaredMethods()) {
 
@@ -34,7 +35,7 @@ public class InvokerMiddleware implements IInvokerService, IOperation {
 
             try {
                 responseCallback
-                        .accept(method.invoke(this, message.getPayload()));
+                        .accept(method.invoke(this, message.getPayload()), message);
             } catch (Exception e) {
                 e.printStackTrace();
             }

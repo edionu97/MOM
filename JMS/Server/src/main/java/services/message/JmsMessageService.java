@@ -46,13 +46,16 @@ public class JmsMessageService {
 
     /**
      * This method is used as callback, when the MOM processes the request
+     *
      * @param message: the message that will be sent to client
      */
-    public void onResponse(final Object message) {
+    public void onResponse(final Object message, final Message requestMessage) {
         try {
+
             var jsonData = mapper.writeValueAsString(
                     new HashMap<String, Object>() {{
                         put("response", message);
+                        put("onRequest", requestMessage);
                     }}
             );
 
