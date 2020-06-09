@@ -4,7 +4,7 @@
 
 *.txt
 
-/apachemq
+/Apachemq
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
