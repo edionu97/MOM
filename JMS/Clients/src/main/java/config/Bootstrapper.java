@@ -2,6 +2,8 @@ package config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import manager.IResourceManager;
+import manager.impl.ResourceManager;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +21,12 @@ public class Bootstrapper {
 
     @Value("${queue.name.middleware.name}")
     private String clientToMiddlewareQueueName;
+
+    @Value("${result-file.name}")
+    private String propertyFileName;
+
+    @Value("${open-result}")
+    private boolean openAfterWrite;
 
     @Bean
     public ObjectMapper objectMapper(){
@@ -42,6 +50,13 @@ public class Bootstrapper {
     @Bean
     public JmsTemplate template(){
         return new JmsTemplate(activeMQConnectionFactory());
+    }
+
+    @Bean
+    public IResourceManager resourceManager() {
+        return new ResourceManager(propertyFileName, openAfterWrite){{
+            clearResource();
+        }};
     }
 
 }

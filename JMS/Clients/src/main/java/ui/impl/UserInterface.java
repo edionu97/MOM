@@ -1,6 +1,7 @@
 package ui.impl;
 
 import controllers.IUserInterfaceController;
+import manager.IResourceManager;
 import messages.request.impl.MiddlewareRequest;
 import messages.response.IResponse;
 import messages.response.impl.DepthListResponse;
@@ -12,7 +13,13 @@ import org.springframework.stereotype.Component;
 import ui.IUserInterface;
 import utils.enums.OperationType;
 
+import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.List;
 import java.util.*;
+import java.util.concurrent.Future;
 
 @Component
 @ComponentScan(basePackages = "controllers")
@@ -20,12 +27,17 @@ public class UserInterface implements IUserInterface {
 
     private final IUserInterfaceController controller;
     private final Map<String, Runnable> options;
+    private final IResourceManager resourceManager;
+
 
     @Autowired
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    public UserInterface(final IUserInterfaceController controller) {
+    public UserInterface(final IUserInterfaceController controller, final IResourceManager resourceManager) {
+
         this.controller = controller;
         this.controller.setOnMessage(this::onMessage);
+        this.resourceManager = resourceManager;
+
         options = this.buildMenu();
     }
 
@@ -45,8 +57,10 @@ public class UserInterface implements IUserInterface {
         showUI();
     }
 
+
     /**
      * In this function the menu is built
+     *
      * @return a dictionary that, as keys has a option and as value a function that will be executed when the user enters the key option
      */
     private Map<String, Runnable> buildMenu() {
@@ -87,6 +101,7 @@ public class UserInterface implements IUserInterface {
 
     /**
      * Shows the options
+     *
      * @return the option that user introduces
      */
     private String showMenuOptions() {
@@ -103,23 +118,28 @@ public class UserInterface implements IUserInterface {
 
     /**
      * This is the callback that is called when a message is pushed to the client
+     *
      * @param message: the message
      */
     private void onMessage(final IResponse message) {
 
         var response = (AbstractResponse) message;
         if (response instanceof SimpleListResponse) {
-            writeToConsole(stringifyResponse(response.getOnRequest(), ((SimpleListResponse) response).getResponse()), true);
+            resourceManager
+                    .writeToResource(stringifyResponse(response.getOnRequest(), ((SimpleListResponse) response).getResponse()));
             return;
         }
 
-        writeToConsole(stringifyResponse(response.getOnRequest(), ((DepthListResponse) response).getResponse()), true);
+        resourceManager
+                .writeToResource(stringifyResponse(response.getOnRequest(), ((DepthListResponse) response).getResponse()));
     }
 
     //region Utils
+
     /**
      * This method is used in order to synchronous write to console
-     * @param builder: a StringBuilder that contain information about what will be printed on screen
+     *
+     * @param builder:    a StringBuilder that contain information about what will be printed on screen
      * @param useNewLine: true ? the content is followed by enter otherwise nothing is appended to standard output
      */
     private synchronized void writeToConsole(final StringBuilder builder, boolean useNewLine) {
@@ -145,8 +165,14 @@ public class UserInterface implements IUserInterface {
                 .max(Comparator.comparingInt(String::length))
                 .map(String::length)
                 .get();
-        var line = String
-                .format("The result of middleware call '%s' with payload '%s' is displayed below", request.getType(), request.getPayload());
+
+        var line = request.getPayload() != null
+                ? String.format(
+                    "The result of middleware call '%s' with payload '%s' is displayed below",
+                    request.getType(),
+                    request.getPayload())
+                : String.format(
+                        "The result of middleware call '%s' is displayed below", request.getType());
         maxLineCharacters = Math.max(maxLineCharacters, line.length());
 
         //create the response
