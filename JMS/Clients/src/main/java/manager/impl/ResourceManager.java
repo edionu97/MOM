@@ -8,10 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 
 public class ResourceManager implements IResourceManager {
 
