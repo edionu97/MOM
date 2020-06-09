@@ -5,19 +5,18 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import ui.IUserInterface;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "config")
+@ComponentScan(basePackages = {"config", "ui"})
 public class Main implements CommandLineRunner {
 
-    private final ApplicationContext context;
+    private final IUserInterface userInterface;
 
     @Autowired
-    public Main(final ApplicationContext context){
-        this.context = context;
+    public Main(final IUserInterface userInterface){
+        this.userInterface = userInterface;
     }
 
     public static void main(final String ...args) {
@@ -26,6 +25,6 @@ public class Main implements CommandLineRunner {
 
     @Override
     public void run(final String... args) {
-        context.getBean(IUserInterface.class).showUI();
+        userInterface.showUI();
     }
 }
