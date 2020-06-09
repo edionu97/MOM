@@ -13,13 +13,7 @@ import org.springframework.stereotype.Component;
 import ui.IUserInterface;
 import utils.enums.OperationType;
 
-import java.awt.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.util.List;
 import java.util.*;
-import java.util.concurrent.Future;
 
 @Component
 @ComponentScan(basePackages = "controllers")
@@ -96,6 +90,8 @@ public class UserInterface implements IUserInterface {
                         setType(OperationType.FilterDuplicates);
                     }})
             );
+
+            put("5", () -> System.exit(0));
         }};
     }
 
@@ -110,7 +106,8 @@ public class UserInterface implements IUserInterface {
                 .append("1. For filtering by filename\n")
                 .append("2. For filtering by text content\n")
                 .append("3. For filtering by binary content\n")
-                .append("4. For filtering by duplicates\n"), true);
+                .append("4. For filtering by duplicates\n")
+                .append("5. For stopping the application\n"), true);
 
         writeToConsole(new StringBuilder("Your option is: "), false);
         return new Scanner(System.in).next();
