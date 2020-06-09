@@ -12,9 +12,7 @@ import org.springframework.stereotype.Component;
 import ui.IUserInterface;
 import utils.enums.OperationType;
 
-import javax.swing.*;
 import java.util.*;
-import java.util.function.Consumer;
 
 @Component
 @ComponentScan(basePackages = "controllers")
@@ -34,7 +32,7 @@ public class UserInterface implements IUserInterface {
     @Override
     @SuppressWarnings("InfiniteRecursion")
     public void showUI() {
-        
+
         var userOption = showMenuOptions();
 
         if (options.containsKey(userOption)) {
@@ -47,6 +45,10 @@ public class UserInterface implements IUserInterface {
         showUI();
     }
 
+    /**
+     * In this function the menu is built
+     * @return a dictionary that, as keys has a option and as value a function that will be executed when the user enters the key option
+     */
     private Map<String, Runnable> buildMenu() {
 
         return new HashMap<>() {{
@@ -83,6 +85,10 @@ public class UserInterface implements IUserInterface {
         }};
     }
 
+    /**
+     * Shows the options
+     * @return the option that user introduces
+     */
     private String showMenuOptions() {
         writeToConsole(new StringBuilder()
                 .append("\nPress one of the options\n")
@@ -95,6 +101,10 @@ public class UserInterface implements IUserInterface {
         return new Scanner(System.in).next();
     }
 
+    /**
+     * This is the callback that is called when a message is pushed to the client
+     * @param message: the message
+     */
     private void onMessage(final IResponse message) {
 
         var response = (AbstractResponse) message;
@@ -106,6 +116,12 @@ public class UserInterface implements IUserInterface {
         writeToConsole(stringifyResponse(response.getOnRequest(), ((DepthListResponse) response).getResponse()), true);
     }
 
+    //region Utils
+    /**
+     * This method is used in order to synchronous write to console
+     * @param builder: a StringBuilder that contain information about what will be printed on screen
+     * @param useNewLine: true ? the content is followed by enter otherwise nothing is appended to standard output
+     */
     private synchronized void writeToConsole(final StringBuilder builder, boolean useNewLine) {
 
         if (useNewLine) {
@@ -171,4 +187,5 @@ public class UserInterface implements IUserInterface {
         builder.append("    ".repeat(tabulatorIndices)).append("]\n");
         return builder;
     }
+    //endregion
 }
