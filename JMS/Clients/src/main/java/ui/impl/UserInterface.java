@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import ui.IUserInterface;
 import utils.enums.OperationType;
 
+import java.io.IOException;
 import java.util.*;
 
 @Component
@@ -38,7 +39,6 @@ public class UserInterface implements IUserInterface {
     @Override
     @SuppressWarnings("InfiniteRecursion")
     public void showUI() {
-
         var userOption = showMenuOptions();
 
         if (options.containsKey(userOption)) {
@@ -101,6 +101,13 @@ public class UserInterface implements IUserInterface {
      * @return the option that user introduces
      */
     private String showMenuOptions() {
+
+        try {
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         writeToConsole(new StringBuilder()
                 .append("\nPress one of the options\n")
                 .append("1. For filtering by filename\n")
