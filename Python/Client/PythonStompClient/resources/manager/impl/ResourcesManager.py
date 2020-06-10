@@ -11,7 +11,13 @@ class ResourcesManager(IResourcesManager):
         """
         super().__init__()
         self.__file = "../resources/constants.xml"
+        self.__constants = None
 
     def getConstants(self):
-        with open(self.__file, 'r') as file:
-            return objectify.fromstring(file.read())
+        # if the file was not yet parsed, then parse the file
+        if self.__constants is None:
+            with open(self.__file, 'r') as file:
+                self.__constants = objectify.fromstring(file.read())
+
+        # get the constants
+        return self.__constants
