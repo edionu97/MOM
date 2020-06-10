@@ -1,4 +1,13 @@
+from abc import abstractmethod
+
+
 class IUserInterface:
 
-    def __init__(self):
+    @abstractmethod
+    def show_ui(self):
+        """
+            This method starts the user interface
+            :return: 
+        """
         pass
+

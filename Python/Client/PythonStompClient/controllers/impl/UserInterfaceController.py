@@ -11,8 +11,8 @@ class UserInterfaceController(stomp.ConnectionListener, IUserInterfaceController
     def set_message_handler(self, onMessage=print):
         self.__handler = onMessage
 
-    def __init__(self, resource: IResourcesManager):
-        self.__constants = resource.getConstants()
+    def __init__(self, resourceManager: IResourcesManager):
+        self.__constants = resourceManager.getConstants()
         self.__connection = None
         self.__handler = None
 
@@ -26,8 +26,7 @@ class UserInterfaceController(stomp.ConnectionListener, IUserInterfaceController
 
     def send(self, message):
         self.__connection.send(
-            destination=self.__constants.serverrequestqueue,
-            body=json.dumps(message))
+            destination=self.__constants.serverrequestqueue, body=message)
 
     def on_message(self, headers, body):
         """
