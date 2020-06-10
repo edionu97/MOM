@@ -12,7 +12,7 @@ class UserInterfaceController(stomp.ConnectionListener, IUserInterfaceController
         self.__handler = onMessage
 
     def __init__(self, resourceManager: IResourcesManager):
-        self.__constants = resourceManager.getConstants()
+        self.__constants = resourceManager.get_constants()
         self.__connection = None
         self.__handler = None
 
