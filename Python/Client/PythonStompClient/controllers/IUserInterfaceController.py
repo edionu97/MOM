@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
 
-class IService:
+class IUserInterfaceController:
 
     @abstractmethod
     def start(self):

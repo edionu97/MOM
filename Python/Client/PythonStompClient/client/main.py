@@ -1,18 +1,18 @@
 from time import sleep
 
 from resources.manager.impl.ResourcesManager import ResourcesManager
-from services.impl.Service import Service
+from controllers.impl.UserInterfaceController import UserInterfaceController
 
 el = {
     "payload": ".txt",
     "type": "FilterByName"
 }
 
-service = Service(resource=ResourcesManager())
+controller = UserInterfaceController(resource=ResourcesManager())
 
-service.set_message_handler(print)
+controller.set_message_handler(print)
 
-service.start()
+controller.start()
 
 
 

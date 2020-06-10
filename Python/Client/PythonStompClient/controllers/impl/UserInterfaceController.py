@@ -3,10 +3,10 @@ import json
 import stomp
 
 from resources.manager.IResourcesManager import IResourcesManager
-from services.IService import IService
+from controllers.IUserInterfaceController import IUserInterfaceController
 
 
-class Service(stomp.ConnectionListener, IService):
+class UserInterfaceController(stomp.ConnectionListener, IUserInterfaceController):
 
     def set_message_handler(self, onMessage=print):
         self.__handler = onMessage
@@ -53,4 +53,6 @@ class Service(stomp.ConnectionListener, IService):
         # set the listener and connect to the queue
         self.__connection.set_listener("py_listener", self)
         self.__connection.connect(wait=True)
+
+        # subscribe the client to the queue
         self.__connection.subscribe(destination=constants.serverresponsequeue + "", id="python-client")
