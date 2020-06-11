@@ -2,15 +2,16 @@ from lxml import objectify
 
 from helpers.DatabaseHelper import DbHelper
 from repo.impl.Repository import Repository
-from services.impl.Service import Service
+from resources.manager.impl.ResourcesManager import ResourcesManager
+from services.impl.Service import FileService
 
 try:
-    # read the constants folder
-    with open('./resources/constants.xml', 'r') as file:
-        constants = objectify.fromstring(file.read())
+    # create the resource manager
+    resources_manager = ResourcesManager()
 
     # create the logic service
-    service = Service(Repository(helper=DbHelper(), constants=constants))
+    service = FileService(
+        repository=Repository(helper=DbHelper(), resources_manager=resources_manager))
 
     print(len(service.find_file_by_text(text="Lorem")))
 except Exception as e:

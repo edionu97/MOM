@@ -5,10 +5,10 @@ from sqlalchemy.sql.elements import and_
 from helpers.Methods import Methods
 from repo.IRepository import IRepository
 from repo.model.Models import File
-from services.IService import IService
+from services.IFileService import IFileService
 
 
-class Service(IService):
+class FileService(IFileService):
 
     def __init__(self, repository: IRepository):
         self.__repository = repository

@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
 
-class IService:
+class IFileService:
 
     @abstractmethod
     def find_file_by_name(self, name) -> []:
