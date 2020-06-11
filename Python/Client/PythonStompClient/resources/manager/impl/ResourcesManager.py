@@ -1,3 +1,7 @@
+import os
+import subprocess
+import webbrowser
+
 from lxml import objectify
 
 from resources.manager.IResourcesManager import IResourcesManager
@@ -10,6 +14,7 @@ class ResourcesManager(IResourcesManager):
             Constructs the object and setts the file to
         """
         super().__init__()
+
         self.__file = "../resources/constants.xml"
         self.__constants = None
 
@@ -18,10 +23,19 @@ class ResourcesManager(IResourcesManager):
         if self.__constants is None:
             with open(self.__file, 'r') as file:
                 self.__constants = objectify.fromstring(file.read())
+            # clear the result file
+            with open(self.get_constants().resultfilepath + "", 'w'):
+                pass
 
         # get the constants
         return self.__constants
 
     def write_to_resource_file(self, message, open_file=False):
-        print(message)
-        pass
+        # open the file for writing appending into it
+        with open(self.get_constants().resultfilepath + "", 'a') as file:
+            file.write(message)
+
+        # if the open_file tag is disabled than do not open the file
+        if not open_file:
+            return
+        subprocess.call(['cmd.exe', '/c', self.get_constants().resultfilepath + ""])

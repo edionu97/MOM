@@ -3,4 +3,5 @@
     <activemqport>61613</activemqport>
     <serverrequestqueue>client-to-middleware</serverrequestqueue>
     <serverresponsequeue>middleware-to-client</serverresponsequeue>
+    <resultfilepath>C:\Users\Eduard\Desktop\dads.txt</resultfilepath>
 </constants>
