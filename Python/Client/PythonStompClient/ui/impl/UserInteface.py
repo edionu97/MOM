@@ -1,5 +1,6 @@
 import json
 import sys
+from os import system
 
 from controllers.IUserInterfaceController import IUserInterfaceController
 from resources.manager.IResourcesManager import IResourcesManager
@@ -73,16 +74,11 @@ class UserInterface(IUserInterface):
             "5": lambda: sys.exit(),
         }
 
-    def __on_message(self, message):
-        self.__resources_manager.write_to_resource_file(
-            message=self.__stringify_response(message),
-            open_file=True
-        )
-
     # region Helpers
 
     @staticmethod
     def __show_user_options():
+        system('cls')
         print(
             "\nPress one of the options\n",
             "1. For filtering by filename\n",

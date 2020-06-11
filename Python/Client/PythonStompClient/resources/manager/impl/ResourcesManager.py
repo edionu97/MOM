@@ -1,6 +1,4 @@
-import os
 import pathlib
-import subprocess
 import webbrowser
 
 from lxml import objectify
@@ -17,11 +15,11 @@ class ResourcesManager(IResourcesManager):
         super().__init__()
 
         # get the file path (the constants file path)
-        self.__file = pathlib.Path(__file__)\
-            .parent\
-            .parent\
-            .parent\
-            .absolute()\
+        self.__file = pathlib.Path(__file__) \
+            .parent \
+            .parent \
+            .parent \
+            .absolute() \
             .joinpath("constants.xml")
 
         self.__constants = None
