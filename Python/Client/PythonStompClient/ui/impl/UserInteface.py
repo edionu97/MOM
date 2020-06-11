@@ -41,7 +41,7 @@ class UserInterface(IUserInterface):
         def option_helper(controller: IUserInterfaceController, message):
             """
                 Helper method for creating the user options
-                :param controller: the controller that sends request to the jms server
+                :param controller: the controllers that sends request to the jms server
                 :param message: the message itself
                 :return: None
             """

@@ -1,4 +1,5 @@
 import os
+import pathlib
 import subprocess
 import webbrowser
 
@@ -15,7 +16,14 @@ class ResourcesManager(IResourcesManager):
         """
         super().__init__()
 
-        self.__file = "../resources/constants.xml"
+        # get the file path (the constants file path)
+        self.__file = pathlib.Path(__file__)\
+            .parent\
+            .parent\
+            .parent\
+            .absolute()\
+            .joinpath("constants.xml")
+
         self.__constants = None
 
     def get_constants(self):
@@ -31,6 +39,7 @@ class ResourcesManager(IResourcesManager):
         return self.__constants
 
     def write_to_resource_file(self, message, open_file=False):
+
         # open the file for writing appending into it
         with open(self.get_constants().resultfilepath + "", 'a') as file:
             file.write(message)
@@ -38,4 +47,6 @@ class ResourcesManager(IResourcesManager):
         # if the open_file tag is disabled than do not open the file
         if not open_file:
             return
-        subprocess.call(['cmd.exe', '/c', self.get_constants().resultfilepath + ""])
+
+        # open the file with default editor enabled
+        webbrowser.open(self.get_constants().resultfilepath + "")
