@@ -12,7 +12,7 @@ class IFileService:
         pass
 
     @abstractmethod
-    def find_file_by_binary(self, binary) -> []:
+    def find_file_by_binary(self, hex_binary_sequence: str) -> []:
         pass
 
     @abstractmethod

@@ -5,7 +5,7 @@ from sqlalchemy.sql.elements import and_
 from helpers.Methods import Methods
 from repo.IRepository import IRepository
 from repo.model.Models import File
-from services.IFileService import IFileService
+from services.main_service.IFileService import IFileService
 
 
 class FileService(IFileService):
@@ -36,10 +36,10 @@ class FileService(IFileService):
             self.__repository
                 .filter(table=File, filters=and_(File.binary_content == None, File.text_content.like(like_text)))))
 
-    def find_file_by_binary(self, binary) -> []:
+    def find_file_by_binary(self, hex_binary_sequence: str) -> []:
         """
             Gets the list of elements that respects a property
-            :param binary: the content of the file(or the part of the content)
+            :param hex_binary_sequence: the content of the file(or the part of the content)
             :return: a list of elements from database that have in their content something like the :param binary
         """
         # noinspection PyComparisonWithNone
@@ -50,7 +50,7 @@ class FileService(IFileService):
         file: File
         for file in binary_files:
             array = [hex(el).replace("0x", "") for el in file.binary_content]
-            if not Methods.is_subset(array, binary):
+            if not Methods.is_subset(array, hex_binary_sequence.split(" ")):
                 continue
             result.append(file.path)
 
