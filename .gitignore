@@ -3,6 +3,7 @@
 *.properties
 
 *.txt
+constants.xml
 
 /Apachemq
 
