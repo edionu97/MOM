@@ -8,6 +8,8 @@ const {
   stompReceiveCallback,
 } = require('./utils/callbacks');
 
+const ResourcesManager = require('./resources/resourcesManager');
+
 function startClient(client, userInterface, controller) {
   // if is in main thread
   if (isMainThread) {
@@ -16,7 +18,9 @@ function startClient(client, userInterface, controller) {
     return;
   }
   //execute in worker thread
-  stompReceiveCallback(client, controller.onMessage);
+  stompReceiveCallback(client, (message) =>
+    controller.onMessage(message, controller)
+  );
 }
 
 function main() {
@@ -28,9 +32,16 @@ function main() {
       return;
     }
 
+    // create the resource maanger
+    const resourcesManager = new ResourcesManager();
+
+    //clear the file
+    resourcesManager.clearFile();
+
     //create the controler
-    const controller = new Controller((message) =>
-      stompSendCallback(message, client)
+    const controller = new Controller(
+      (message) => stompSendCallback(message, client),
+      resourcesManager
     );
 
     //create the user interface

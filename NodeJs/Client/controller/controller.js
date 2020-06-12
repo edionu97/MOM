@@ -1,7 +1,8 @@
 fs = require('fs');
 
-Controller = function (sendCallback) {
+Controller = function (sendCallback, resourcesManager) {
   this.sendCallback = sendCallback;
+  this.resourcesManager = resourcesManager;
   return this;
 };
 
@@ -42,12 +43,11 @@ Controller.prototype.filterByDuplicates = function (_, self) {
   return this;
 };
 
-Controller.prototype.onMessage = function (message) {
-  fs.appendFile('helloworld.txt', JSON.stringify(message, null, 4), function (
-    err
-  ) {
-    if (err) return console.log(err);
-  });
+Controller.prototype.onMessage = function (message, self) {
+  self.resourcesManager.writeToResourcesFile(
+    JSON.stringify(message, null, 4),
+    true
+  );
   return this;
 };
 
