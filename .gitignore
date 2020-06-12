@@ -4,6 +4,7 @@
 
 *.txt
 constants.xml
+constants.js
 
 /Apachemq
 
