@@ -8,7 +8,7 @@ const {
   stompReceiveCallback,
 } = require('./utils/callbacks');
 
-function main(client, userInterface, controller) {
+function startClient(client, userInterface, controller) {
   // if is in main thread
   if (isMainThread) {
     new Worker(__filename);
@@ -19,7 +19,7 @@ function main(client, userInterface, controller) {
   stompReceiveCallback(client, controller.onMessage);
 }
 
-function startClient() {
+function main() {
   //connect to activemq broker
   stompit.connect(Constants.connectOptions, function (error, client) {
     //check if there is anny connection error
@@ -37,8 +37,8 @@ function startClient() {
     const userInterface = new UserInterface(controller);
 
     //start the main method
-    main(client, userInterface, controller);
+    startClient(client, userInterface, controller);
   });
 }
 
-startClient();
+main();
