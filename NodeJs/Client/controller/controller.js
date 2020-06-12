@@ -1,30 +1,37 @@
 fs = require('fs');
 
-Controller = function (stompConnection) {
-  this.connection = stompConnection;
+Controller = function (sendCallback) {
+  this.sendCallback = sendCallback;
   return this;
 };
 
-Controller.prototype.filterByName = function (readerLine) {
-  return 'da';
-};
-
-Controller.prototype.filterByContent = function (reader) {
+// callback for filtering the files by name
+Controller.prototype.filterByName = function (reader, self) {
+  // read the user request and convert it to server message
+  self.sendCallback({
+    type: 'FilterByName',
+    payload: reader.question('Enter file name: ').toString().trim(),
+  });
   return this;
 };
 
-Controller.prototype.filterByBinary = function (reader) {
+Controller.prototype.filterByContent = function (reader, self) {
   return this;
 };
 
-Controller.prototype.filterByDuplicates = function (reader) {
+Controller.prototype.filterByBinary = function (reader, self) {
+  return this;
+};
+
+Controller.prototype.filterByDuplicates = function (reader, self) {
   return this;
 };
 
 Controller.prototype.onMessage = function (message) {
-  fs.writeFile('helloworld.txt', message, function (err) {
+  fs.appendFile('helloworld.txt', JSON.stringify(message, null, 4), function (
+    err
+  ) {
     if (err) return console.log(err);
-    console.log('Hello World > helloworld.txt');
   });
   return this;
 };

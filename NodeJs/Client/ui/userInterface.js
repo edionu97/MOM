@@ -31,6 +31,7 @@ const createDictionary = (methodHolder) => {
 //main user interface object
 UserInterface = function (controller) {
   this.methods = createDictionary(controller);
+  this.controller = controller;
   this.userOptions = createOptions();
   return this;
 };
@@ -51,7 +52,7 @@ UserInterface.prototype.showUI = function () {
   }
 
   //call the option
-  this.methods.get(answer)(reader);
+  this.methods.get(answer)(reader, this.controller);
 
   // set the timer
   setTimeout(() => this.showUI(), 0);
