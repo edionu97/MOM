@@ -8,7 +8,7 @@ let ResourcesManager = function () {
 
 ResourcesManager.prototype.writeToResourcesFile = function (content, openFile) {
   //write the content into file
-  fs.appendFile(Constants.fileLocation, content, (err) => console.log(err));
+  fs.appendFile(Constants.fileLocation, content, (err) => {});
 
   //check if we should open the file
   if (openFile !== true) {

@@ -37,7 +37,7 @@ let UserInterface = function (controller) {
 };
 
 UserInterface.prototype.showUI = function () {
-  //console.clear();
+  console.clear();
 
   // read the user option from the keyboard
   const answer = reader.question(this.userOptions).toString().trim();
