@@ -1,6 +1,8 @@
-fs = require('fs');
 
-Controller = function (sendCallback, resourcesManager) {
+// noinspection GrazieInspection
+const {stringifyResponse} = require('../utils/callbacks');
+
+let Controller = function (sendCallback, resourcesManager) {
   this.sendCallback = sendCallback;
   this.resourcesManager = resourcesManager;
   return this;
@@ -44,10 +46,11 @@ Controller.prototype.filterByDuplicates = function (_, self) {
 };
 
 Controller.prototype.onMessage = function (message, self) {
-  self.resourcesManager.writeToResourcesFile(
-    JSON.stringify(message, null, 4),
-    true
-  );
+  //create the string message
+  const stringMessage = stringifyResponse(message['onRequest'], message['response']);
+
+  //print the response into file
+  self.resourcesManager.writeToResourcesFile(stringMessage, true);
   return this;
 };
 

@@ -22,14 +22,14 @@ const createDictionary = (methodHolder) => {
   methodMap.set('2', methodHolder.filterByContent);
   methodMap.set('3', methodHolder.filterByBinary);
   methodMap.set('4', methodHolder.filterByDuplicates);
-  methodMap.set('5', process.exit);
+  methodMap.set('5', (_, __) => process.exit(0));
 
   //return the result
   return methodMap;
 };
 
 //main user interface object
-UserInterface = function (controller) {
+let UserInterface = function (controller) {
   this.methods = createDictionary(controller);
   this.controller = controller;
   this.userOptions = createOptions();
@@ -48,7 +48,7 @@ UserInterface.prototype.showUI = function () {
 
     // set the timer
     setTimeout(() => this.showUI(), 600);
-    return;
+    return this;
   }
 
   //call the option

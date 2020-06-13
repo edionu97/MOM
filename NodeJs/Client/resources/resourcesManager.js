@@ -1,7 +1,8 @@
 const Constants = require('../constants/constants');
 const open = require('open');
+const fs = require('fs');
 
-ResourcesManager = function () {
+let ResourcesManager = function () {
   return this;
 };
 
