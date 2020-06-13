@@ -1,20 +1,20 @@
 const {Sequelize, DataTypes, literal} = require('sequelize');
 const Constants = require('../constants/constants');
-const models = require("../storage/models/models");
+const {Directory, File} = require("../storage/models/models");
 
 const createDatabaseConnectionAndGetModels = () => {
     //create the database connections
     const sequelize = new Sequelize(Constants.databaseConnection.connectionString);
 
     //create the directory model
-    const directoryModel = sequelize.define('Directory', models.Directory,
+    const directoryModel = sequelize.define('Directory', Directory,
         {
             tableName: 'directory',
             timestamps: false
         });
 
     //create the file model
-    const fileModel = sequelize.define('File', models.File,
+    const fileModel = sequelize.define('File', File,
         {
             tableName: 'file',
             timestamps: false
