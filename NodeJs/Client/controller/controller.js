@@ -40,7 +40,7 @@ Controller.prototype.filterByDuplicates = function (_, self) {
   // read the user request and convert it to server message
   self.sendCallback({
     type: 'FilterDuplicates',
-    payload: undefined,
+    payload: null,
   });
   return this;
 };
