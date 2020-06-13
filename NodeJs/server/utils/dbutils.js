@@ -2,9 +2,10 @@ const {Sequelize, DataTypes, literal} = require('sequelize');
 const Constants = require('../constants/constants');
 const {Directory, File} = require("../storage/models/models");
 
-const createDatabaseConnectionAndGetModels = () => {
+const createDatabaseConnectionAndGetModels = async () => {
+    const {connectionString, createEveryTime, logging} = Constants.databaseConnection;
     //create the database connections
-    const sequelize = new Sequelize(Constants.databaseConnection.connectionString);
+    const sequelize = new Sequelize(connectionString, {logging: logging});
 
     //create the directory model
     const directoryModel = sequelize.define('Directory', Directory,
@@ -22,10 +23,12 @@ const createDatabaseConnectionAndGetModels = () => {
 
     //create the relationships
     directoryModel.hasMany(fileModel, {
-        as: 'files', foreignKey: 'directory_id'
+        as: 'files',
+        foreignKey: 'directory_id'
     });
     directoryModel.hasMany(directoryModel, {
-        as: 'subdirectories', foreignKey: 'parent_directory_id'
+        as: 'subdirectories',
+        foreignKey: 'parent_directory_id'
     });
     directoryModel.belongsTo(directoryModel, {
         as: 'parentDirectory',
@@ -33,8 +36,13 @@ const createDatabaseConnectionAndGetModels = () => {
         foreignKeyConstraint: true
     })
     fileModel.belongsTo(directoryModel, {
-        as: 'directory', foreignKey: 'directory_id', foreignKeyConstraint: true
+        as: 'directory',
+        foreignKey: 'directory_id',
+        foreignKeyConstraint: true
     });
+
+    //await database syncing
+    await sequelize.sync({force: createEveryTime});
 
     return {
         Directory: directoryModel,
