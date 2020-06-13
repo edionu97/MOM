@@ -1,8 +1,11 @@
-const {createDatabaseConnectionAndGetModels} = require('./utils/dbutils');
+const {repository} = require('./storage/repos/repository');
+const {service} = require('./services/service');
 
 
 const main = async () => {
-    const {SequelizeInstance} = await createDatabaseConnectionAndGetModels();
+    const databaseConnection = await repository.createDatabaseConnectionAndGetModels();
+    const result = await service.filterByDuplicates(databaseConnection, "ff d8 ff");
+    console.log(result);
 }
 
 
