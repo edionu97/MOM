@@ -12,6 +12,7 @@
   "dependencies": {
     "mysql2": "^2.1.0",
     "sequelize": "^5.21.12",
-    "sha3": "^2.1.2"
+    "sha3": "^2.1.2",
+    "stompit": "^1.0.0"
   }
 }

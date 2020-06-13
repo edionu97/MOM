@@ -1,18 +1,18 @@
-const {repository} = require('./storage/repos/repository');
-const {service} = require('./services/service');
+const { repository } = require('./storage/repos/repository');
+const { service } = require('./services/fileService');
+const { startStompService } = require('./services/stompService');
 
 
 const main = async () => {
     const databaseConnection = await repository.createDatabaseConnectionAndGetModels();
-    const result = await service.filterByDuplicates(databaseConnection, "ff d8 ff");
-    console.log(result);
+    console.log("Service started...")
+    startStompService(service, databaseConnection);
 }
-
 
 (async () => {
     try {
         await main();
     } catch (e) {
-        // Deal with the fact the chain failed
+        console.error(e);
     }
 })();
