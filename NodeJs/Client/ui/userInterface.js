@@ -2,14 +2,13 @@ const reader = require('readline-sync');
 
 // create the user options
 const createOptions = () => {
-  return `
-			\nPress one of the options
-			\n1. For filtering by filename
-			\n2. For filtering by text content
-			\n3. For filtering by binary content
-			\n4. For filtering by duplicates
-			\n5. For stopping the application
-			\nYour option is: `;
+  return`Press one of the options\n
+  1. For filtering by filename
+  2. For filtering by text content
+  3. For filtering by binary content
+  4. For filtering by duplicates
+  5. For stopping the application
+  \nYour option is: `;
 };
 
 //create the method dictionary
